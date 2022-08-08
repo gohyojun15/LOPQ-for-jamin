@@ -1,0 +1,47 @@
+exp_all:
+  seed: 2022
+  exp_name: "msmarco_trained"
+  mode: "FineTune" # ["Continual", "UpperBound", "FineTune"]
+  sup_quant: False
+  amp: True
+
+save_path: "msmarco_trained_epochiter0"
+
+encoder:
+  pretrained_model_cfg: bert-base-uncased
+  projection_dim: 0
+  sequence_length: 256
+  pretrained: True
+  do_lower_case: True
+
+train:
+  batch_size: 32
+  learning_rate: 2e-5
+  adam_eps: 1e-8
+  weight_decay: 0.0
+  num_workers: 10
+  gpus: [1]
+  epoch: 10
+  logging_freq: 50
+  loss:
+    tau: 0.1
+
+PQ:
+  name: "onlinePQ" # ["onlinePQ", "onlineOPQ"]
+  M : 8
+  Ks: 256
+
+online:
+  task_sequence: ["nfcorpus", "nq", "hotpotqa", "fiqa", "fever", "quora"]
+  batch_size: 9
+  eval_batch_size : 1
+  retriev_batch_size: 1000
+  continual: "none" # ["ER"]
+  optimizers:
+    name: "AdamW" # ["SGD", "Adam", "AdamW"]
+    learning_rate: 2e-5
+    weight_decay: 0.0
+
+  optim_num: 1
+  evaluation:
+    topk: 50
